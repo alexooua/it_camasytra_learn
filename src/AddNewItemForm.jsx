@@ -7,7 +7,7 @@ class AddNewItemForm extends React.Component {
         fullInput: "",
         title: ""
     }
-    //    добавление таска поклику
+    //    добавление  поклику
     onAddItemClick = () => {
 
         if (this.state.title) {
@@ -35,7 +35,7 @@ class AddNewItemForm extends React.Component {
         )
 
     }
-    //добавить таск по нажатию ентера
+    //добавить  по нажатию ентера
     onAddTaskKeyPress = (e) => {
         if (e.key === 'Enter') {
             this.onAddItemClick();

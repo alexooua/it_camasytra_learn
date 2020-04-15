@@ -27,11 +27,13 @@ class TodoListTask extends React.Component {
         return (
 
             <div className={taskClass}>
+                {/*чекбокс*/}
                 <input type="checkbox"
                        onChange={this.onIsDoneChanged}
                        checked={this.props.task.isDone}/>
+                {/*спан с номером*/}
                 <span>{this.props.task.id} - </span>
-
+                {/*титлы таски*/}
                 {this.state.editMode ?
                     <input
                         value={this.props.task.title}

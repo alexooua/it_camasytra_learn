@@ -3,7 +3,6 @@ import './App.css';
 import TodoListTasks from "./TodoListTasks";
 import TodoListFooter from "./TodoListFooter";
 import AddNewItemForm from "./AddNewItemForm";
-import TodoListTask from "./TodoListTask";
 import TodoListTitle from "./TodoListTitle";
 
 class TodoList extends React.Component {
@@ -14,19 +13,15 @@ class TodoList extends React.Component {
 
     state = {
         tasks: [
-            //     {id:0,title: "JS", isDone: false, priority: "low"},
-            //     {id:1,title: "CSS", isDone: true, priority: "low"},
-            //     {id:2,title: "React", isDone: false, priority: "low"},
-            //     {id:3,title: "SasS", isDone: true, priority: "low"},
-            //     {id:4,title: "Redux", isDone: false, priority: "height"}
         ],
         filterValue: "All"
     }
     nextTaskId = 1;
+    //сохраняем в базу в браузере
     saveState = () => {
-
         localStorage.setItem('our-state-'+this.props.id, JSON.stringify(this.state))
     }
+    //востановлениве стейта
     restoreState = () => {
         let state = this.state
         let stateAsString = localStorage.getItem("our-state-"+this.props.id)
@@ -57,11 +52,14 @@ class TodoList extends React.Component {
         }, this.saveState)
 
     }
+    //измененик фильтра
     changeFilter = (newFilterValue) => {
         this.setState({
             filterValue: newFilterValue
         }, this.saveState)
     }
+
+    //замена  таски
     changeTask = (taskId, newPropsObj) => {
         let newTasks = this.state.tasks.map(t => {
             if (t.id !== taskId) {
@@ -74,9 +72,11 @@ class TodoList extends React.Component {
             tasks: newTasks
         }, this.saveState)
     }
+    //замена статуса таски
     changeStatus = (taskId, isDone) => {
         this.changeTask(taskId, {isDone: isDone})
     }
+    //замена названия таски
     changeTitle = (taskId, newTitle) => {
         this.changeTask(taskId, {title: newTitle})
     }
@@ -96,7 +96,7 @@ class TodoList extends React.Component {
                         changeTitle={this.changeTitle}
                         changeStatus={this.changeStatus}
                         tasks={this.state.tasks.filter(t => {
-                            return (this.state.filterValue === "All") && true ||
+                            return (this.state.filterValue === "All")  ||
                                 (this.state.filterValue === "Completed") && (t.isDone === true) ||
                                 (this.state.filterValue === "Active") && (t.isDone === false)
                         })}/>

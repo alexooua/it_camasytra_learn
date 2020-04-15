@@ -1,4 +1,5 @@
 import React from "react";
+
 class TodoListFooter extends React.Component {
     state = {
         isHidden: false
