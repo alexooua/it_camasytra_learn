@@ -1,9 +1,10 @@
 import React from 'react';
-import './App.css';
+import './../App.css';
 import TodoListTasks from "./TodoListTasks";
 import TodoListFooter from "./TodoListFooter";
 import AddNewItemForm from "./AddNewItemForm";
 import TodoListTitle from "./TodoListTitle";
+import {connect} from "react-redux";
 
 class TodoList extends React.Component {
 //    Визывает реакт
@@ -45,11 +46,15 @@ class TodoList extends React.Component {
             isDone: false,
             priority: "low"
         }
+
         this.nextTaskId++
-        let newTasks = [...this.state.tasks, newTask]
-        this.setState({
-            tasks: newTasks
-        }, this.saveState)
+        this.props.addTask(this.props.id,newTask)
+
+
+        // let newTasks = [...this.state.tasks, newTask]
+        // this.setState({
+        //     tasks: newTasks
+        // }, this.saveState)
 
     }
     //измененик фильтра
@@ -68,19 +73,22 @@ class TodoList extends React.Component {
                 return {...t, ...newPropsObj}
             }
         })
-        this.setState({
-            tasks: newTasks
-        }, this.saveState)
+// this.props.changeTask
+        // this.setState({
+        //     tasks: newTasks
+        // }, this.saveState)
     }
     //замена статуса таски
     changeStatus = (taskId, isDone) => {
-        this.changeTask(taskId, {isDone: isDone})
+        this.props.changeTask(this.props.id,taskId, {isDone: isDone})
     }
     //замена названия таски
     changeTitle = (taskId, newTitle) => {
-        this.changeTask(taskId, {title: newTitle})
+        this.props.changeTask(this.props.id,    taskId, {title: newTitle})
     }
-
+    deleteTodolist=()=>{
+        this.props.deleteTodolist(this.props.id)
+    }
 
     render = () => {
 
@@ -88,14 +96,18 @@ class TodoList extends React.Component {
             <div className="App">
                 <div className="todoList">
 
-                    <TodoListTitle  title={this.props.title}/>
+                    <TodoListTitle  title={this.props.title}
+                                    id={this.props.id}/>
+                    <button onClick={this.props.deleteTodolist}
+                    >X
+                    </button>
                     <AddNewItemForm addItem={this.addTask} />
 
 
                     <TodoListTasks
                         changeTitle={this.changeTitle}
                         changeStatus={this.changeStatus}
-                        tasks={this.state.tasks.filter(t => {
+                        tasks={this.props.tasks.filter(t => {
                             return (this.state.filterValue === "All")  ||
                                 (this.state.filterValue === "Completed") && (t.isDone === true) ||
                                 (this.state.filterValue === "Active") && (t.isDone === false)
@@ -110,6 +122,32 @@ class TodoList extends React.Component {
         );
     }
 }
+const mapStateToProps = (state) => {
+    return {
 
-export default TodoList;
+    }
+}
+const mapDispatchToProps=(dispatch)=>{
+    return {
+        addTask:(toDoListId,newTask)=>{
+            const action={
+                type:"ADD-TASK",
+                newTask:newTask,
+                toDoListId:toDoListId
 
+            }
+
+            dispatch(action)
+        },
+        changeTask:(toDoListId,taskId,obj)=>{
+            const action={
+                type:"CHANGE-TASK",
+                 toDoListId:toDoListId
+
+            }
+
+        }
+    }
+}
+const TodolistConnect = connect(null,mapDispatchToProps)(TodoList);
+export default TodolistConnect;

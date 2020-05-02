@@ -1,18 +1,19 @@
 import React from 'react';
 import './App.css';
-import TodoList from "./TodoList";
-import AddNewItemForm from "./AddNewItemForm";
+import TodoList from "./components/TodoList";
+import AddNewItemForm from "./components/AddNewItemForm";
+import {connect} from "react-redux";
 
 
 class App extends React.Component {
 
     state = {
-        todolists: [
+        toDoLists: [
         ],
         filterValue: "All"
     }
     // id для листов
-    nextTodoListId = 0
+    nextToDoListId =1
 
     //загружаем в стейт с базы в браузере
     componentDidMount() {
@@ -20,18 +21,18 @@ class App extends React.Component {
     }
     //сохраняем в базу в браузере
     saveState = () => {
-        localStorage.setItem('todolists', JSON.stringify(this.state))
+        localStorage.setItem('toDoLists', JSON.stringify(this.state))
     }
     //востановлениве стейта
     restoreState = () => {
         let state = this.state
-        let stateAsString = localStorage.getItem('todolists')
+        let stateAsString = localStorage.getItem('toDoLists')
         if (stateAsString) {
             state = JSON.parse(stateAsString)
         }
         // вторым параметром передаём func ответсвенную за коректный id
         this.setState(state,()=>{
-            this.state.todolists.forEach(todo=>{
+            this.state.toDoLists.forEach(todo=>{
                 if (todo.id>=this.nextTaskId){
                     this.nextTaskId=todo.id+1
                 }
@@ -39,31 +40,48 @@ class App extends React.Component {
         })
     }
     //додаём лист в стейт
-    addTodoList = (newTodolistName) => {
-        let newTodoList = {
-            title: newTodolistName,
-            id: this.nextTodoListId
+    onAddToDoList = (newToDoListName) => {
+        let newToDoList = {
+            title: newToDoListName,
+            id: this.nextToDoListId,
+            tasks: []
         }
-        this.nextTodoListId++
-        this.setState({todolists: [...this.state.todolists, newTodoList]},
-        this.saveState )
+        this.props.addToDoList(newToDoList)
+        this.nextToDoListId++
     }
 
     render = () => {
-        let todolists = this.state.todolists.map(t => {
-                return <TodoList key={t.id} id={t.id} title={t.title}/>
+        let toDoLists = this.props.toDoLists.map(t => {
+                return <TodoList key={t.id} id={t.id} title={t.title} tasks={t.tasks}/>
             }
         )
         return (
             <>
-                <AddNewItemForm addItem={this.addTodoList}/>
+                <AddNewItemForm addItem={this.onAddToDoList}/>
                 <div className="App">
-                    {todolists}
+                    {toDoLists}
                 </div>
             </>
         );
     }
 }
 
-export default App;
 
+const mapStateToProps = (state) => {
+    return {
+        toDoLists: state.toDoLists
+    }
+}
+const mapDispatchToProps=(dispatch)=>{
+    return {
+       addToDoList:(newToDoList)=>{
+           const action={
+               type:"ADD-TO-DO-LIST",
+               newToDoList:newToDoList
+           }
+           dispatch(action)
+       }
+    }
+}
+const ConnectedApp = connect(mapStateToProps,mapDispatchToProps)(App);
+export default ConnectedApp;

@@ -10,7 +10,7 @@ class TodoListTitle extends React.Component {
 
         return (
             <div className="todoList-header">
-                <h3 className="todoList-header__title">{this.props.title}</h3>
+                <h3 className="todoList-header__title">{`${this.props.id} - ${this.props.title}`}</h3>
             </div>
         );
     }
