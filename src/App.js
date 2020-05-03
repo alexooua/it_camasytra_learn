@@ -41,13 +41,14 @@ class App extends React.Component {
     }
     //додаём лист в стейт
     onAddToDoList = (newToDoListName) => {
-        let newToDoList = {
+        let newToDoListApp = {
             title: newToDoListName,
             id: this.nextToDoListId,
             tasks: []
         }
-        this.props.addToDoList(newToDoList)
+        this.props.addToDoList(newToDoListApp)
         this.nextToDoListId++
+
     }
 
     render = () => {
@@ -73,7 +74,9 @@ const mapStateToProps = (state) => {
     }
 }
 const mapDispatchToProps=(dispatch)=>{
+
     return {
+
        addToDoList:(newToDoList)=>{
            const action={
                type:"ADD-TO-DO-LIST",
