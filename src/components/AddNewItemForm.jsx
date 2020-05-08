@@ -1,6 +1,7 @@
 import React from "react";
 
 
+
 class AddNewItemForm extends React.Component {
 
     state = {
@@ -58,7 +59,7 @@ class AddNewItemForm extends React.Component {
                            value={this.state.title}
                     />
 
-                    <button onClick={this.onAddItemClick}
+                    <button  onClick={this.onAddItemClick}
                     >Add
                     </button>
 
