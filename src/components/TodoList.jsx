@@ -7,6 +7,8 @@ import TodoListTitle from "./TodoListTitle";
 import {connect} from "react-redux";
 import {addTaskAC, addToDoListAC, changeTaskAC, deleteTaskAC, deleteToDoListAC} from "../reducer";
 
+import axios from "axios"
+
 class TodoList extends React.Component {
 //    Визывает реакт
     componentDidMount() {
@@ -88,7 +90,18 @@ class TodoList extends React.Component {
         this.props.changeTask(this.props.id, taskId, {title: newTitle})
     }
     onDeleteToDoList = () => {
-        this.props.deleteToDoList(this.props.id)
+        axios.delete(
+            `https://social-network.samuraijs.com/api/1.1/todo-lists/${this.props.id}`,
+            {
+                withCredentials:true,
+                headers:{"API_KEY":"bdf52653-d6b7-4a3f-a378-af4831d7858c"}
+            }
+        )
+            .then(response=>{
+                if (response.data.resultCode===0)
+                {this.props.deleteToDoList(this.props.id)}
+            })
+
     }
     onDeleteTask = (taskId) => {
 
@@ -96,7 +109,7 @@ class TodoList extends React.Component {
 
     }
     render = () => {
-
+let {tasks=[]}=this.props
         return (
             <div className="App">
                 <div className="todoList">
@@ -114,7 +127,7 @@ class TodoList extends React.Component {
                         onDeleteTask={this.onDeleteTask}
                         changeTitle={this.changeTitle}
                         changeStatus={this.changeStatus}
-                        tasks={this.props.tasks.filter(t => {
+                        tasks={tasks.filter(t => {
                             return (this.state.filterValue === "All") ||
                                 (this.state.filterValue === "Completed") && (t.isDone === true) ||
                                 (this.state.filterValue === "Active") && (t.isDone === false)

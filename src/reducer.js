@@ -3,6 +3,8 @@ export const ADD_TASK='todolist/reducer/ADD-TASK'
 export const CHANGE_TASK='todolist/reducer/CHANGE-TASK'
 export const DELETE_TO_DO_LIST='todolist/reducer/DELETE-TO-DO-LIST'
 export const DELETE_TASK='todolist/reducer/DELETE_TASK'
+export const SET_TODOLISTS='todolist/reducer/SET_TODOLISTS'
+
 
 const initialState = {
     toDoLists: [
@@ -12,6 +14,8 @@ export const reducer = (state = initialState, action) => {
 
     let newToDoLists
     switch (action.type) {
+        case "SET_TODOLISTS":
+             return {...state,toDoLists:action.toDoLists }
         case "ADD_TO_DO_LIST":
             newToDoLists=[...state.toDoLists,action.newToDoList];
             return {...state,toDoLists: newToDoLists}
@@ -57,6 +61,13 @@ export const reducer = (state = initialState, action) => {
     }
     return state;
 }
+export const   set_toDoListsAC=(toDoLists)=>{
+    return{
+        type: "SET_TODOLISTS",
+        toDoLists: toDoLists,
+    }
+}
+
 
 export const addToDoListAC=(newToDoList)=>{
     return{
