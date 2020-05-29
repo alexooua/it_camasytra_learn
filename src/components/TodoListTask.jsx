@@ -16,7 +16,8 @@ class TodoListTask extends React.Component {
     }
 
     onIsDoneChanged = (e) => {
-        this.props.changeStatus(this.props.task.id, e.currentTarget.checked)
+        let status=e.currentTarget.checked?2:0
+        this.props.changeStatus(this.props.task,status)
     }
     onTitleChanged = (e) => {
         this.props.changeTitle(this.props.task.id, e.currentTarget.value)
@@ -27,16 +28,15 @@ class TodoListTask extends React.Component {
     }
     render = () => {
         //меняем клас от выполнения
-        let taskClass = this.props.task.isDone ? "todoList-task done" : "todoList-task"
+        let taskClass = this.props.task.status ===2? "todoList-task done" : "todoList-task"
         return (
 
             <div className={taskClass}>
                 {/*чекбокс*/}
                 <input type="checkbox"
                        onChange={this.onIsDoneChanged}
-                       checked={this.props.task.isDone}/>
-                {/*спан с номером*/}
-                <span>{this.props.task.id} - </span>
+                       checked={this.props.task.status===2}/>
+
                 {/*титлы таски*/}
                 {this.state.editMode ?
                     <input
