@@ -6,6 +6,7 @@ export const DELETE_TASK = 'todolist/reducer/DELETE_TASK'
 export const SET_TODOLISTS = 'todolist/reducer/SET_TODOLISTS'
 export const SET_TASKS = 'todolist/reducer/SET_TASKS'
 export const UPDATE_TASK = 'todolist/reducer/UPDATE_TASK'
+export const CHANGE_TODO_LIST_TITLE = 'todolist/reducer/CHANGE_TODO_LIST_TITLE'
 
 
 const initialState = {
@@ -49,29 +50,45 @@ export const reducer = (state = initialState, action) => {
                             if (task.id !==action.task.id){
                                 return task
                             }else {
-                                return {...task,...action.task}
+                                return {...task, ...action.task}
                             }
                         })
-                        }
+                    }
                 }
 
             })
 
-            return {...state,toDoLists: newToDoLists}
+            return {...state, toDoLists: newToDoLists}
         case "DELETE_TO_DO_LIST":
-            return {...state,toDoLists: state.toDoLists.filter(toDoList=>{
+            return {
+                ...state, toDoLists: state.toDoLists.filter(toDoList => {
                     return toDoList.id !== action.toDoListId
-                })}
+                })
+            }
+        case "CHANGE_TODO_LIST_TITLE":
+            return {
+                ...state, toDoLists: state.toDoLists.map(toDoList => {
+                    if (toDoList.id === action.todoListId) {
+                        return {...toDoList, title: action.title}
+                    } else {
+                        return toDoList
+                    }
+                })
+            }
         case "DELETE_TASK":
-            return {...state,
-                toDoLists:state.toDoLists.map(todo=>{
-                    if (todo.id !==action.toDoListId){
+            return {
+                ...state,
+                toDoLists: state.toDoLists.map(todo => {
+                    if (todo.id !== action.toDoListId) {
                         return todo
-                    }else {
-                        return {...todo,tasks: todo.tasks.filter(task=>{
-                                return  task.id!==action.taskId
-                            })}
-                    }})
+                    } else {
+                        return {
+                            ...todo, tasks: todo.tasks.filter(task => {
+                                return task.id !== action.taskId
+                            })
+                        }
+                    }
+                })
             }
     }
     return state;
@@ -125,11 +142,18 @@ export const setTasksAC = (tasks, todoListId) => {
         todoListId
     }
 }
-export  const updateTaskAC=(task)=>{
+export const updateTaskAC = (task) => {
 
-    return{
-        type:"UPDATE_TASK",
-        task:task
+    return {
+        type: "UPDATE_TASK",
+        task: task
+    }
+}
+export const changeTodoListTitleAC = (title, todoListId) => {
+    return {
+        type: "CHANGE_TODO_LIST_TITLE",
+        title: title,
+        todoListId: todoListId
     }
 }
 // export const setStateFromLocalStorageAC=()=>{

@@ -5,9 +5,7 @@ import TodoListFooter from "./TodoListFooter";
 import AddNewItemForm from "./AddNewItemForm";
 import TodoListTitle from "./TodoListTitle";
 import {connect} from "react-redux";
-import {addTaskAC, deleteTaskAC, deleteToDoListAC, setTasksAC, updateTaskAC} from "../reducer";
-
-import axios from "axios"
+import {addTaskAC, changeTodoListTitleAC, deleteTaskAC, deleteToDoListAC, setTasksAC, updateTaskAC} from "../reducer";
 import api from "./api";
 
 class TodoList extends React.Component {
@@ -17,8 +15,7 @@ class TodoList extends React.Component {
     }
 
     state = {
-        tasks: [
-        ],
+        tasks: [],
         filterValue: "All"
     }
     //сохраняем в базу в браузере
@@ -82,8 +79,8 @@ class TodoList extends React.Component {
 
     }
     onDeleteTask = (taskId) => {
-        let id =this.props.id
-        api.deleteTask(taskId,id)
+        let id = this.props.id
+        api.deleteTask(taskId, id)
             .then(response => {
                 if (response.data.resultCode === 0) {
                     this.props.deleteTask(id, taskId)
@@ -91,14 +88,28 @@ class TodoList extends React.Component {
             })
 
     }
+
+    setToDoListsTitle = (title) => {
+        let id = this.props.id
+        api.onchangeTodoListTitle(title, id)
+            .then(response=> {
+                if (response.data.resultCode === 0) {
+                    this.props.changeTodoListTitle(title, id)
+                }
+            })
+    }
+
     render = () => {
         let {tasks = []} = this.props
         return (
             <div className="App">
                 <div className="todoList">
 
-                    <TodoListTitle title={this.props.title}
-                                   id={this.props.id}/>
+                    <TodoListTitle
+                        onSetToDoListsTitle={this.setToDoListsTitle}
+                        todoListMode={this.props.todoListMode}
+                        title={this.props.title}
+                        id={this.props.id}/>
 
                     <button onClick={this.onDeleteToDoList}>DELETE
                     </button>
@@ -152,8 +163,11 @@ const mapDispatchToProps=(dispatch)=>{
         },
         updateTask: (task) => {
             dispatch(updateTaskAC(task))
+        },
+        changeTodoListTitle: (title, todoListId) => {
+            dispatch(changeTodoListTitleAC(title, todoListId))
         }
     }
 }
-const ToDoListConnect = connect(null, mapDispatchToProps)(TodoList);
-export default ToDoListConnect;
+const  ConnectTodoList = connect(null, mapDispatchToProps)(TodoList);
+export default ConnectTodoList;

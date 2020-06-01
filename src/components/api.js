@@ -1,64 +1,52 @@
 import axios from "axios"
 
+const instance = axios.create({
+    baseURL: 'https://social-network.samuraijs.com/api/1.1/todo-lists',
+    withCredentials: true,
+    headers: {"API-KEY": "30e72227-8e6a-43bd-abeb-5f8819797dc9"}
+
+});
 
 const api = {
+    onchangeTodoListTitle(title,id) {
+        return instance.put(
+            `/${id}`,
+            {title: title}
+        )
+    },
     createTodolist(title) {
-        return axios.post(
-            "https://social-network.samuraijs.com/api/1.1/todo-lists",
+        return instance.post(
+            "",
             {title: title},
-            {
-                withCredentials: true,
-                headers: {"API-KEY": "30e72227-8e6a-43bd-abeb-5f8819797dc9"}
-            }
         )
     },
     getTodoList() {
-        return axios.get("https://social-network.samuraijs.com/api/1.1/todo-lists",
-            {withCredentials: true})
+        return instance.get("")
     },
-    getTask(id){
-        return axios.get( `https://social-network.samuraijs.com/api/1.1/todo-lists/${id}/tasks`,
-            {
-                withCredentials: true,
-                headers: {"API-KEY": "30e72227-8e6a-43bd-abeb-5f8819797dc9"}
-            })
+    getTask(id) {
+        return instance.get(`/${id}/tasks`,
+        )
     },
     addTask(newTitle, todoListId) {
-        return axios.post(
-            `https://social-network.samuraijs.com/api/1.1/todo-lists/${todoListId}/tasks`,
+        return instance.post(
+            `/${todoListId}/tasks`,
             {title: newTitle},
-            {
-                withCredentials: true,
-                headers: {"API-KEY": "30e72227-8e6a-43bd-abeb-5f8819797dc9"}
-            }
         )
     },
     ChangeTask(task) {
-        return axios.put(
-            `https://social-network.samuraijs.com/api/1.1/todo-lists/${task.todoListId}/tasks/${task.id}`,
+        return instance.put(
+            `/${task.todoListId}/tasks/${task.id}`,
             task,
-            {
-                withCredentials: true,
-                headers: {"API-KEY": "30e72227-8e6a-43bd-abeb-5f8819797dc9"}
-            }
         )
     },
     deleteToDoList(id) {
-        return axios.delete(
-            `https://social-network.samuraijs.com/api/1.1/todo-lists/${id}`,
-            {
-                withCredentials: true,
-                headers: {"API-KEY": "30e72227-8e6a-43bd-abeb-5f8819797dc9"}
-            }
+        return instance.delete(
+            `/${id}`,
         )
     },
     deleteTask(taskId,id) {
-        return  axios.delete(
-            `https://social-network.samuraijs.com/api/1.1//todo-lists/${id}/tasks/${taskId}`,
-            {
-                withCredentials: true,
-                headers: {"API-KEY": "30e72227-8e6a-43bd-abeb-5f8819797dc9"}
-            }
+        return instance.delete(
+            `/${id}/tasks/${taskId}`,
         )
     }
 }
