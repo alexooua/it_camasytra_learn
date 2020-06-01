@@ -2,17 +2,17 @@ import React from "react";
 
 class TodoListTask extends React.Component {
     state = {
-        editMode: false
+        editMode: false,
+        title: this.props.task.title
     }
 
     activateEditMode = () => {
         this.setState({editMode: true})
-
     }
 
     deActivateEditMode = () => {
         this.setState({editMode: false})
-
+        this.props.changeTitle(this.props.task, this.state.title)
     }
 
     onIsDoneChanged = (e) => {
@@ -20,7 +20,7 @@ class TodoListTask extends React.Component {
         this.props.changeStatus(this.props.task,status)
     }
     onTitleChanged = (e) => {
-        this.props.changeTitle(this.props.task.id, e.currentTarget.value)
+        this.setState({title: e.currentTarget.value})
     }
 
     onDeleteTask=()=>{
@@ -40,7 +40,7 @@ class TodoListTask extends React.Component {
                 {/*титлы таски*/}
                 {this.state.editMode ?
                     <input
-                        value={this.props.task.title}
+                        value={this.state.title}
                         autoFocus={true}
                         onBlur={this.deActivateEditMode}
                         onChange={this.onTitleChanged}
